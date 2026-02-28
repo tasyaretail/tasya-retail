@@ -25,7 +25,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
   </head>
-  <body>
+  <body data-bs-target="#mainNav" data-bs-offset="120" tabindex="0">
 
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
       <defs>
@@ -245,9 +245,9 @@
                     <option>Gourmet Items</option>
                   </select> -->
               
-                  <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                    <li class="nav-item active">
-                      <a href="index.html" class="nav-link">Home</a>
+                  <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0" id="mainNav">
+                    <li class="nav-item">
+                      <a href="#home" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item dropdown">
                       <a href="#farsan" class="nav-link">Hot Farsan</a>
@@ -306,7 +306,7 @@
       </div>
     </header>
 
-    <section class="py-3" style="background-image: url('images/background-pattern.jpg'); background-repeat: no-repeat; background-size: cover;">
+    <section id="home" class="py-3" style="background-image: url('images/background-pattern.jpg'); background-repeat: no-repeat; background-size: cover;">
   <div class="container-fluid">
 
     <div class="row g-4 align-items-stretch">
@@ -334,6 +334,10 @@
 
             <div class="swiper-slide">
               <img src="images/slider-5.jpg" class="img-fluid w-100 rounded-5">
+            </div>
+
+             <div class="swiper-slide">
+              <img src="images/slider-6.jpg" class="img-fluid w-100 rounded-5">
             </div>
 
           </div>
@@ -773,7 +777,7 @@
                 <nav>
                   <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a href="#" class="nav-link text-uppercase fs-6 active" id="nav-all-tab" data-bs-toggle="tab" data-bs-target="#nav-all">All</a>
-                    <a href="#" class="nav-link text-uppercase fs-6" id="snacks-tab" data-bs-toggle="tab" data-bs-target="#snacks">Snacks</a>
+                    <a href="#" class="nav-link text-uppercase fs-6" id="hotfarsan-tab" data-bs-toggle="tab" data-bs-target="#hotfarsan">Snacks</a>
                     <a href="#" class="nav-link text-uppercase fs-6" id="dry-tab" data-bs-toggle="tab" data-bs-target="#dry">Dryfruits</a>
                     <a href="#" class="nav-link text-uppercase fs-6" id="kids-tab" data-bs-toggle="tab" data-bs-target="#kids">Kids Food</a>
                     <a href="#" class="nav-link text-uppercase fs-6" id="mouth-tab" data-bs-toggle="tab" data-bs-target="#mouth">Mouth Freshner</a>
@@ -1092,8 +1096,7 @@
                   
                 </div>
 
-                <div class="tab-pane fade" id="snacks" role="tabpanel" aria-labelledby="snacks-tab">
-                  
+                <div class="tab-pane fade" id="hotfarsan" role="tabpanel" aria-labelledby="hotfarsan-tab">
                   <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
 
                <div class="col">
@@ -1187,12 +1190,11 @@
                       </div>
                     </div>
 
-                
-
-                  </div>
-                  <!-- / product-grid -->
-
                 </div>
+
+            
+                </div>
+                
                 <div class="tab-pane fade" id="dry" role="tabpanel" aria-labelledby="dry-tab">
 
                   <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
@@ -2582,5 +2584,70 @@
     });
   });
 </script>
+<script>
+document.querySelectorAll("#mainNav .nav-link").forEach(link => {
+  link.addEventListener("click", function () {
+
+    document.querySelectorAll("#mainNav .nav-link")
+      .forEach(nav => nav.classList.remove("active"));
+
+    this.classList.add("active");
+
+    const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasNavbar'));
+    if (offcanvas) offcanvas.hide();
+
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll("#mainNav .nav-link");
+
+  function activateMenu() {
+
+    let scrollPosition = window.scrollY + 360; // adjust if needed
+
+    let foundActive = false;
+
+    sections.forEach(section => {
+
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const sectionId = section.getAttribute("id");
+
+      if (
+        scrollPosition >= sectionTop &&
+        scrollPosition < sectionTop + sectionHeight
+      ) {
+        navLinks.forEach(link => link.classList.remove("active"));
+
+        const activeLink = document.querySelector(
+          '#mainNav .nav-link[href="#' + sectionId + '"]'
+        );
+
+        if (activeLink) activeLink.classList.add("active");
+
+        foundActive = true;
+      }
+    });
+
+    // If nothing found (top of page), activate Home
+    if (!foundActive) {
+      navLinks.forEach(link => link.classList.remove("active"));
+      const homeLink = document.querySelector('#mainNav .nav-link[href="#home"]');
+      if (homeLink) homeLink.classList.add("active");
+    }
+  }
+
+  window.addEventListener("scroll", activateMenu);
+
+  // Run on first load
+  activateMenu();
+
+});
+</script>
+
   </body>
 </html>
